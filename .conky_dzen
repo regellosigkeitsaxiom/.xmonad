@@ -1,0 +1,12 @@
+use_xft yes
+xftfont Droid Sans Mono:style=Regular
+xftalpha 1
+
+background yes
+out_to_console yes
+out_to_x no
+# Update interval in seconds
+update_interval 5
+ 
+TEXT
+^fg(\#aaaaaa) ^i(/home/valentin/.xmonad/dzen2/battery.xbm)${battery_percent}% ^i(/home/valentin/.xmonad/dzen2/cpu.xbm)^fg(\#aaaaaa)${cpu}% ^i(/home/valentin/.xmonad/dzen2/mem.xbm)^fg(\#aaaaaa)${memperc}% ^i(/home/valentin/.xmonad/dzen2/stop.xbm)${swapperc}% ^i(/home/valentin/.xmonad/dzen2/swap.xbm)${diskio} ^bg(\#343637) ^i(/home/valentin/.xmonad/dzen2/wifi_01.xbm)^fg(\#cccccc) ^i(/home/valentin/.xmonad/dzen2/net_down_03.xbm)${downspeedf wlp2s0}^fg(\#cccccc) ^i(/home/valentin/.xmonad/dzen2/net_up_03.xbm)${upspeedf wlp2s0} ^bg(\#444444) ^fg(\#aaaaaa)^i(/home/valentin/.xmonad/dzen2/clock.xbm)^fg(\#FFFFFF) ${time %a %d %b } ^fg(\#ff0033)${time %I:%M %p}

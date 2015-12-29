@@ -1,0 +1,9 @@
+out_to_x no
+out_to_console yes
+background no
+update_interval 2
+format_human_readable yes
+override_utf8_locale yes
+
+TEXT
+${exec /home/lily/.xmonad/script/dropbox_stat} 

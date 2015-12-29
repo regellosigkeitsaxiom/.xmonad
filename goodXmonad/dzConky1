@@ -1,0 +1,13 @@
+out_to_x no
+out_to_console yes
+background no
+update_interval 2
+format_human_readable yes
+override_utf8_locale yes
+
+TEXT
+${exec /home/lily/.xmonad/script/volbar}  \
+^i(/home/lily/.xmonad/icon/cpu.xbm) ^fg(\#ffffff)${cpu}%  ^fg(\#c28d1d)\
+^i(/home/lily/.xmonad/icon/mem.xbm) ^fg(\#ffffff)${mem}  ^fg(\#c28d1d)\
+^i(/home/lily/.xmonad/icon/bat_full_01.xbm) ^fg(\#ffffff)${battery_percent}%  ^fg(\#c28d1d)\
+^i(/home/lily/.xmonad/icon/clock.xbm) ${time ^fg(#ffffff)%a, %d %b ^fg(#cb1456)- ^fg(#ffffff)%H:%M} 
