@@ -22,24 +22,25 @@ import Launcher ( spawnConfigured )
 --названия окошек смотреть через xprop
 
 dzenOpts = " -fg '#FFFFFF' -bg '#1B1D1E' -h '16' -fn '-*-inconsolata-*-*-*-*-12-*-*-*-*-*-iso8859-9'"
-xmobarCpu  = "xmobar ~/.xmonad/xmobar.config/xmobar.config.cpu"
-xmobarMem  = "xmobar ~/.xmonad/xmobar.config/xmobar.config.mem"
-xmobarSwap = "xmobar ~/.xmonad/xmobar.config/xmobar.config.swap"
-xmobarDisk = "xmobar ~/.xmonad/xmobar.config/xmobar.config.disk"
-xmobarNet  = "xmobar ~/.xmonad/xmobar.config/xmobar.config.net"
-xmobarRest = "xmobar ~/.xmonad/xmobar.config/xmobar.config.rest"
+xmobarCpu  = "xmobar ~/.xmonad/xmobar.config -p 'Static { xpos=0, ypos=0, width=60, height=20 }' -t '  %cpu%'"
+xmobarMem  = "xmobar ~/.xmonad/xmobar.config -p 'Static { xpos=60, ypos=0, width=60, height=20 }' -t '%memory%'"
+xmobarSwap = "xmobar ~/.xmonad/xmobar.config -p 'Static { xpos=120, ypos=0, width=40, height=20 }' -t '%swap%'"
+xmobarDisk = "xmobar ~/.xmonad/xmobar.config -p 'Static { xpos=160, ypos=0, width=140, height=20 }' -t '}%diskio%{'"
+xmobarNet  = "xmobar ~/.xmonad/xmobar.config -p 'Static { xpos=300, ypos=0, width=120, height=20 }' -t '}%wlp2s0%{'"
+xmobarRest = "xmobar ~/.xmonad/xmobar.config -p 'Static { xpos=420, ypos=0, width=946, height=20 }' -t '}{%UIII%  <fc=#eeaa00>%date%</fc>  '"
 myBitmapsDir = "/home/valentin/.xmonad/dzen2"
+xmobs = [ xmobarCpu
+        , xmobarMem
+        , xmobarSwap
+        , xmobarDisk
+        , xmobarNet
+        , xmobarRest
+        ]
 
 main = do
     spawnConfigured "main.cfg"
     spawnConfigured "gau.cfg"
-    sequence_ $ map spawn [ xmobarCpu
-                          , xmobarMem
-                          , xmobarSwap
-                          , xmobarDisk
-                          , xmobarNet
-                          , xmobarRest
-                          ]
+    sequence_ $ map spawn xmobs
     --dzenLeftBar <- spawnPipe myXmonadBar
     --dzenRightBar <- spawnPipe myStatusBar
     xmonad $ ewmh defaultConfig 
@@ -59,6 +60,8 @@ bordColor = "#e01d4b"
 focusColor = "#8888ff"
 myKeys =
     [ ("<XF86AudioNext>", spawn "mocp -p")
+    , ("M-x", spawn "pkill xmobar")
+    , ("M-S-x", sequence_ $ map spawn xmobs )
     , ("<XF86AudioPlay>", spawn "mocp -G")
     , ("<XF86AudioStop>", spawn "mocp -s")
     , ("<XF86AudioPrev>", spawn "mocp -r")
