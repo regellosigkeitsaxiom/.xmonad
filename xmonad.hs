@@ -21,16 +21,32 @@ import Launcher ( spawnConfigured )
 --проверять нажатые клавиши через xev
 --названия окошек смотреть через xprop
 
+dzenOpts = " -fg '#FFFFFF' -bg '#1B1D1E' -h '16' -fn '-*-inconsolata-*-*-*-*-12-*-*-*-*-*-iso8859-9'"
+xmobarCpu  = "xmobar ~/.xmonad/xmobar.config/xmobar.config.cpu"
+xmobarMem  = "xmobar ~/.xmonad/xmobar.config/xmobar.config.mem"
+xmobarSwap = "xmobar ~/.xmonad/xmobar.config/xmobar.config.swap"
+xmobarDisk = "xmobar ~/.xmonad/xmobar.config/xmobar.config.disk"
+xmobarNet  = "xmobar ~/.xmonad/xmobar.config/xmobar.config.net"
+xmobarRest = "xmobar ~/.xmonad/xmobar.config/xmobar.config.rest"
+myBitmapsDir = "/home/valentin/.xmonad/dzen2"
+
 main = do
     spawnConfigured "main.cfg"
     spawnConfigured "gau.cfg"
-    dzenLeftBar <- spawnPipe myXmonadBar
-    dzenRightBar <- spawnPipe myStatusBar
+    sequence_ $ map spawn [ xmobarCpu
+                          , xmobarMem
+                          , xmobarSwap
+                          , xmobarDisk
+                          , xmobarNet
+                          , xmobarRest
+                          ]
+    --dzenLeftBar <- spawnPipe myXmonadBar
+    --dzenRightBar <- spawnPipe myStatusBar
     xmonad $ ewmh defaultConfig 
          { modMask = mod4Mask
          , layoutHook = myLayoutHook
          , manageHook = myMH2 
-         , logHook = myLogHook dzenLeftBar -- >> fadeInactiveLogHook 0xdddddddd
+         --, logHook = myLogHook dzenLeftBar -- >> fadeInactiveLogHook 0xdddddddd
          , workspaces = myWorkspaces
          , focusedBorderColor = bordColor
          , borderWidth = 5
@@ -105,10 +121,6 @@ myMH2 = composeAll
     , stringProperty "WM_WINDOW_ROLE" =? "metr" --> doShift "metr"
     ] --Добавить автоматическое убирание дока при посещении "media"
 
-dzenOpts = " -fg '#FFFFFF' -bg '#1B1D1E' -h '16' -fn '-*-inconsolata-*-*-*-*-12-*-*-*-*-*-iso8859-9'"
-myXmonadBar = "dzen2 -x '0' -y '0' -w '836' -ta 'l'" ++ dzenOpts
-myStatusBar = "conky -c /home/valentin/.xmonad/.conky_dzen | dzen2 -x '836' -w '530' -ta 'r'" ++ dzenOpts
-myBitmapsDir = "/home/valentin/.xmonad/dzen2"
 
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP

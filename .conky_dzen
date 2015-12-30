@@ -1,5 +1,5 @@
 use_xft yes
-xftfont Droid Sans Mono:style=Regular
+xftfont Droid Sans Serif:style=Regular
 xftalpha 1
 
 background yes
