@@ -1,4 +1,6 @@
-module Launcher where
+module Launcher
+    ( spawnConfigured )
+where
 
 import System.IO ( readFile )
 import System.Directory ( getHomeDirectory )
