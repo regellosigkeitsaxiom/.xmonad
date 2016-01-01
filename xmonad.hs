@@ -22,9 +22,6 @@ import Xmobarrel
 --проверять нажатые клавиши через xev
 --названия окошек смотреть через xprop
 
-dzenOpts = " -fg '#FFFFFF' -bg '#1B1D1E' -h '16' -fn '-*-inconsolata-*-*-*-*-12-*-*-*-*-*-iso8859-9'"
-myBitmapsDir = "/home/valentin/.xmonad/dzen2"
-
 launchXmobars = do
     x <- readTweeks tweeksConf
     sequence_ $ map spawn $ tweeks2String basePosition x
@@ -35,8 +32,6 @@ main = do
     spawnConfigured "main.cfg"
     spawnConfigured "gau.cfg"
     launchXmobars
-    --dzenLeftBar <- spawnPipe myXmonadBar
-    --dzenRightBar <- spawnPipe myStatusBar
     xmonad $ ewmh defaultConfig 
          { modMask = mod4Mask
          , layoutHook = myLayoutHook
@@ -83,7 +78,7 @@ myKeys =
     , ("M-S-d", windows $ W.shift "work")
     , ("M-f", windows $ W.greedyView "free")
     , ("M-S-f", windows $ W.shift "free")
-    , ("M-i", spawn "pkill dzen; xmonad --recompile; xmonad --restart")
+    , ("M-i", spawn "pkill xmobar; xmonad --recompile; xmonad --restart")
     , ("M-S-i", io (exitWith ExitSuccess))
     , ("M-o", spawn "firefox")
     , ("M-Print", spawn "scrot -s")
@@ -93,7 +88,11 @@ myKeys =
     , ("M-S-\\", spawn "synclient TouchpadOff=0")
     ]
 
-myLayoutHook = avoidStruts $ smartBorders $ workSpaceHook2 $ workSpaceHook $ customLayoutHook
+myLayoutHook = avoidStruts
+             . smartBorders
+             . workSpaceHook2
+             . workSpaceHook
+             $ customLayoutHook
 workSpaceHook = onWorkspaces ["metr"] metrLayoutHook
 workSpaceHook2 = onWorkspaces ["media"] mediaLayoutHook
 mediaLayoutHook = Full ||| Tall 1 (5/100) (1/2)
@@ -113,28 +112,5 @@ myMH2 = composeAll
     , className =? "Steam" --> doShift "free"
     , className =? "adom" --> doShift "media"
     , title =? "My experiment" --> doShift "media"
-    --, className =? "eu4" --> doShift "media"
     , stringProperty "WM_WINDOW_ROLE" =? "metr" --> doShift "metr"
     ] --Добавить автоматическое убирание дока при посещении "media"
-
-
-myLogHook :: Handle -> X ()
-myLogHook h = dynamicLogWithPP $ defaultPP
-    { ppCurrent           = dzenColor focusColor "#4B4D4E" . pad
-    , ppVisible           = dzenColor "white" "#1B1D1E" . pad
-    , ppHidden            = dzenColor "white" "#1B1D1E" . pad
-    , ppHiddenNoWindows   = dzenColor "#7b7b7b" "#1B1D1E" . pad
-    , ppUrgent            = dzenColor "#000000" "#ff4444" . pad
-    , ppWsSep             = ""
-    , ppSep               = "  |  "
-    , ppLayout            = dzenColor focusColor "#1B1D1E" .
-                            (\x -> case x of
-                                "Tall" -> "^i(" ++ myBitmapsDir ++ "/tall.xbm)"
-                                "Mirror Tall" -> "^i(" ++ myBitmapsDir ++ "/mtall.xbm)"
-                                "Full" -> "^i(" ++ myBitmapsDir ++ "/full.xbm)"
-                                "Simple Float" -> "~"
-                                _ -> x
-                            )
-    , ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape
-    , ppOutput            =   hPutStrLn h
-    }
