@@ -26,6 +26,8 @@ import Control.Exception ( catch
 --проверять нажатые клавиши через xev
 --названия окошек смотреть через xprop
 
+tweeksConf = "/home/valentin/.xmonad/cfg/xmobars.conf"
+
 launchXmobars = do
     catch 
         ( do
@@ -33,8 +35,6 @@ launchXmobars = do
           sequence_ $ map spawn $ tweeks2String basePosition x
         )
         ( \e -> print ( e :: SomeException ))
-
-tweeksConf = "/home/valentin/.xmonad/cfg/xmobars.conf"
 
 main = do
     spawnConfigured "main.cfg"
@@ -45,6 +45,7 @@ main = do
          , layoutHook = myLayoutHook
          , manageHook = myMH2 
          --, logHook = myLogHook dzenLeftBar -- >> fadeInactiveLogHook 0xdddddddd
+         , logHook = dynamicLogString defaultPP >>= xmonadPropLog
          , workspaces = myWorkspaces
          , focusedBorderColor = bordColor
          , borderWidth = 5
@@ -56,8 +57,6 @@ bordColor = "#e01d4b"
 focusColor = "#8888ff"
 myKeys =
     [ ("<XF86AudioNext>", spawn "mocp -p")
-    , ("M-S-x", liftIO $ launchXmobars )
-    , ("M-x", spawn "pkill xmobar")
     , ("<XF86AudioPlay>", spawn "mocp -G")
     , ("<XF86AudioStop>", spawn "mocp -s")
     , ("<XF86AudioPrev>", spawn "mocp -r")
@@ -70,6 +69,10 @@ myKeys =
     , ("<XF86AudioMute>", spawn "amixer set Master toggle")
     , ("<XF86MonBrightnessDown>", spawn "xbacklight -4")
     , ("<XF86MonBrightnessUp>", spawn "xbacklight +4")
+
+    , ("M-x", spawn "pkill xmobar")
+    , ("M-S-x", liftIO $ launchXmobars )
+    
     , ("M-e", windows $ W.greedyView "draw")
     , ("M-S-e", windows $ W.shift "draw")
     , ("M-r", windows $ W.greedyView "read")
@@ -92,7 +95,7 @@ myKeys =
     , ("M-Print", spawn "scrot -s")
     , ("M-v", sendMessage ToggleStruts)
     , ("M-\\", spawn "synclient TouchpadOff=1; xdotool mousemove 2000 2000")
-    --, ("M-S-l", spawn "synclient TouchpadOff=0; xdotool mousemove 683 384")
+  --, ("M-S-l", spawn "synclient TouchpadOff=0; xdotool mousemove 683 384")
     , ("M-S-\\", spawn "synclient TouchpadOff=0")
     ]
 
@@ -104,12 +107,16 @@ myLayoutHook = avoidStruts
 workSpaceHook = onWorkspaces ["metr"] metrLayoutHook
 workSpaceHook2 = onWorkspaces ["media"] mediaLayoutHook
 mediaLayoutHook = Full ||| Tall 1 (5/100) (1/2)
+
 metrLayoutHook = tiled ||| Mirror tiled ||| Full
     where tiled = Tall 2 (2/100) (1/2)
+
 customLayoutHook = layoutHook defaultConfig
 
 myMH = myMH2 <+> manageHook defaultConfig
+
 myWorkspaces = ["main","web","draw","read","metr","media","free","work"]
+
 myMH2 = composeAll
     [ className =? "mplayer2" --> doShift "media"
     , className =? "MPlayer" --> doShift "media"
