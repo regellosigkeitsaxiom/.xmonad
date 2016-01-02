@@ -19,14 +19,22 @@ import System.Exit
 import Launcher ( spawnConfigured )
 import Xmobarrel
 
+import Control.Exception ( catch
+                         , SomeException
+                         )
+
 --проверять нажатые клавиши через xev
 --названия окошек смотреть через xprop
 
 launchXmobars = do
-    x <- readTweeks tweeksConf
-    sequence_ $ map spawn $ tweeks2String basePosition x
+    catch 
+        ( do
+          x <- readTweeks tweeksConf
+          sequence_ $ map spawn $ tweeks2String basePosition x
+        )
+        ( \e -> print ( e :: SomeException ))
 
-tweeksConf = "/home/valentin/.xmonad/lib/xmobars.conf"
+tweeksConf = "/home/valentin/.xmonad/cfg/xmobars.conf"
 
 main = do
     spawnConfigured "main.cfg"

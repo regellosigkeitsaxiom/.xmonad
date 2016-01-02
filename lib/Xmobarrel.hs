@@ -24,7 +24,7 @@ basePosition = Static { xpos = 0
                       , height = 20
                       }
 
-configLine = "~/.xmonad/xmobar.config"
+configLine = "~/.xmonad/cfg/xmobar.config"
 
 output :: Static -> String -> String
 output pos pat =
