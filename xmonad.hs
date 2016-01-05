@@ -37,9 +37,9 @@ launchXmobars = do
         ( \e -> print ( e :: SomeException ))
 
 main = do
+    launchXmobars
     spawnConfigured "main.cfg"
     spawnConfigured "gau.cfg"
-    launchXmobars
     xmonad $ ewmh defaultConfig 
          { modMask = mod4Mask
          , layoutHook = myLayoutHook
