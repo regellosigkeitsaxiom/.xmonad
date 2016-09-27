@@ -1,0 +1,5 @@
+*.swp
+xmonad-*-linux
+xmonad.errors
+*.hi
+*.o
