@@ -50,7 +50,7 @@ main = do
          , focusedBorderColor = bordColor
          , borderWidth = 5
          , normalBorderColor = "#666666"
-         , terminal = "roxterm"
+         , terminal = "xfce4-terminal"
          } `additionalKeysP` myKeys 
 
 bordColor = "#e01d4b"
@@ -94,8 +94,8 @@ myKeys =
     , ("M-o", spawn "firefox -P default")
     --, ("M-Print", spawn "scrot -s")
     , ("M-v", sendMessage ToggleStruts)
-    , ("M-\\", spawn "synclient TouchpadOff=1; xdotool mousemove 2000 2000")
-    , ("M-S-\\", spawn "synclient TouchpadOff=0")
+    , ("M-\\", spawn "xinput set-prop 11 139 0; xdotool mousemove 2000 2000")
+    , ("M-S-\\", spawn "xinput set-prop 11 139 1;") -- Hardware-dependent
     ]
 
 myLayoutHook = avoidStruts
