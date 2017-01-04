@@ -56,23 +56,22 @@ main = do
 bordColor = "#e01d4b"
 focusColor = "#8888ff"
 myKeys =
-    [ ("<XF86AudioNext>", spawn "mocp -p")
-    , ("<XF86AudioPlay>", spawn "mocp -G")
+    [ ("<XF86AudioPlay>", spawn "mocp -G")
+    , ("M-<XF86AudioPlay>", spawn "mocp -o s; mocp -o r; mocp -o a; mocp -p")
     , ("<XF86AudioStop>", spawn "mocp -s")
+    , ("<XF86AudioNext>", spawn "mocp -f")
+    , ("M-<XF86AudioNext>", spawn "mocp -k +20")
     , ("<XF86AudioPrev>", spawn "mocp -r")
-    , ("<XF86AudioLowerVolume>", spawn "amixer set Headphone 10-")
-    , ("M-<XF86AudioLowerVolume>", spawn "amixer set Headphone 3dB-")
-    , ("<XF86AudioRaiseVolume>", spawn "amixer set Headphone 10+")
-    , ("M-<XF86AudioRaiseVolume>", spawn "amixer set Headphone 3dB+")
-    , ("<XF86Launch1>", spawn "sudo pm-hibernate")
-    , ("M-<XF86Launch1>", spawn "sudo pm-suspend")
+    , ("M-<XF86AudioPrev>", spawn "mocp -k -20")
+    , ("<XF86AudioLowerVolume>", spawn "amixer set Master 3dB-")
+    , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 3dB+")
+    --, ("<XF86Launch1>", spawn "sudo pm-hibernate") --Works on Lenovo
+    --, ("M-<XF86Launch1>", spawn "sudo pm-suspend") --Works on Lenovo
     , ("<XF86AudioMute>", spawn "amixer set Master toggle")
     , ("<XF86MonBrightnessDown>", spawn "xbacklight -4")
     , ("<XF86MonBrightnessUp>", spawn "xbacklight +4")
-
-    , ("M-x", spawn "pkill xmobar")
-    , ("M-S-x", liftIO $ launchXmobars )
-    
+    , ("M-x", spawn "pkill xmobar") --For debug
+    , ("M-S-x", liftIO $ launchXmobars ) --For debug
     , ("M-e", windows $ W.greedyView "E")
     , ("M-S-e", windows $ W.shift "E")
     , ("M-r", windows $ W.greedyView "R")
@@ -92,7 +91,7 @@ myKeys =
     , ("M-i", spawn "pkill xmobar; xmonad --recompile; xmonad --restart")
     , ("M-S-i", io (exitWith ExitSuccess))
     , ("M-o", spawn "firefox -P default")
-    --, ("M-Print", spawn "scrot -s")
+    , ("<Print>", spawn "scrot -s")
     , ("M-v", sendMessage ToggleStruts)
     , ("M-\\", spawn "xinput set-prop 11 139 0; xdotool mousemove 2000 2000")
     , ("M-S-\\", spawn "xinput set-prop 11 139 1;") -- Hardware-dependent
@@ -125,6 +124,6 @@ myMH2 = composeAll
     , className =? "Mcomix" --> doShift "R"
     , className =? "Steam" --> doShift "F"
     , className =? "adom" --> doShift "F"
-    , title =? "My experiment" --> doShift "S"
+    , title =? "My experiment" --> doShift "F"
     -- , stringProperty "WM_WINDOW_ROLE" =? "metr" --> doShift "metr"
     ] --Добавить автоматическое убирание дока при посещении "media"

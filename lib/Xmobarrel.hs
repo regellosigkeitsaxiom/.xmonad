@@ -16,7 +16,7 @@ data Tweek = Tweek Int String
 
 --Should get dynamically
 screenWidth :: Int
-screenWidth = 1366
+screenWidth = 1920
 
 basePosition = Static { xpos = 0
                       , ypos = 0
