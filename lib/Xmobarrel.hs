@@ -41,19 +41,22 @@ tweeks2String st ( tw@(Tweek a b) : tws ) =
     output st{width=a} b : tweeks2String st{xpos=xpos st+a} tws
 
 readTweeks :: FilePath -> IO [ Tweek ]
-readTweeks f = do
+readTweeks f = do return xmobars
+  {-
     t <- readFile f --Need to catch exception !
     case readMaybe t of
-        Just x -> return x
+        --Just x -> return x
         Nothing -> do
             putStrLn "Could not parse xmobars.conf, insanely defaulting"
             return xmobars
+            -}
 
 xmobars :: [ Tweek ]
 xmobars = [ Tweek 60 "%cpu%"
           , Tweek 60 "%memory%"
-          , Tweek 40 "%swap%"
-          , Tweek 140 "}%diskio%{"
-          , Tweek 120 "}%wlp2s0%{"
-          , Tweek 0 "}{%UIII%  <fc=#ff0000>%date%</fc>"
+          , Tweek 60 "%swap%"
+          , Tweek 60 "%diskio%"
+          , Tweek 160 "}%wlp2s0%{"
+          , Tweek 1120 "<fn=3><fc=#666666>%XMonadLog%</fc></fn>"
+          , Tweek 0 "}{%battery%      %UIII%     <fc=#000000>%date%   </fc>"
           ]

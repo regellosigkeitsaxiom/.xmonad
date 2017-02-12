@@ -123,6 +123,7 @@ myMH2 = composeAll
     , className =? "Inkscape" --> doShift "F"
     , className =? "Mcomix" --> doShift "R"
     , className =? "Steam" --> doShift "F"
+    , className =? "Slack" --> doShift "R"
     , className =? "adom" --> doShift "F"
     , title =? "My experiment" --> doShift "F"
     -- , stringProperty "WM_WINDOW_ROLE" =? "metr" --> doShift "metr"
