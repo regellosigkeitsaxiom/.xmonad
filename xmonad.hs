@@ -19,9 +19,10 @@ import System.Exit
 import Launcher ( spawnConfigured )
 import Xmobarrel
 
-import Control.Exception ( catch
-                         , SomeException
-                         )
+import Control.Exception
+  ( catch
+  , SomeException
+  )
 
 --проверять нажатые клавиши через xev
 --названия окошек смотреть через xprop
@@ -39,18 +40,20 @@ launchXmobars = do
 main = do
     launchXmobars
     spawnConfigured "main.cfg"
-    spawnConfigured "gau.cfg"
-    xmonad $ ewmh defaultConfig 
+    --spawnConfigured "gau.cfg"
+    xmonad $ ewmh def 
          { modMask = mod4Mask
          , layoutHook = myLayoutHook
          , manageHook = myMH2 
          --, logHook = myLogHook dzenLeftBar -- >> fadeInactiveLogHook 0xdddddddd
-         , logHook = dynamicLogString defaultPP >>= xmonadPropLog
+         , logHook = dynamicLogString def >>= xmonadPropLog
          , workspaces = myWorkspaces
          , focusedBorderColor = bordColor
          , borderWidth = 5
          , normalBorderColor = "#666666"
          , terminal = "xfce4-terminal"
+         , handleEventHook = docksEventHook
+         , startupHook = docksStartupHook
          } `additionalKeysP` myKeys 
 
 bordColor = "#e01d4b"
@@ -91,6 +94,7 @@ myKeys =
     , ("M-i", spawn "pkill xmobar; xmonad --recompile; xmonad --restart")
     , ("M-S-i", io (exitWith ExitSuccess))
     , ("M-o", spawn "firefox -P default")
+    , ("M-k", spawn "slack")
     , ("<Print>", spawn "scrot -s")
     , ("M-v", sendMessage ToggleStruts)
     , ("M-\\", spawn "xinput set-prop 11 139 0; xdotool mousemove 2000 2000")
@@ -101,19 +105,16 @@ myLayoutHook = avoidStruts
              . smartBorders
              -- . workSpaceHook2
              -- . workSpaceHook
-             $ customLayoutHook
+             $ layoutHook def
 --workSpaceHook = onWorkspaces ["metr"] metrLayoutHook
 --workSpaceHook2 = onWorkspaces ["media"] mediaLayoutHook
 --mediaLayoutHook = Full ||| Tall 1 (5/100) (1/2)
 --metrLayoutHook = tiled ||| Mirror tiled ||| Full
     --where tiled = Tall 2 (2/100) (1/2)
 
-customLayoutHook = layoutHook defaultConfig
-
-myMH = myMH2 <+> manageHook defaultConfig
+myMH = myMH2 <+> manageHook def
 
 myWorkspaces = ["Q","W","E","R","A","S","D","F"]
---myWorkspaces = ["main","web","draw","read","metr","media","free","work"]
 
 myMH2 = composeAll
     [ className =? "mplayer2" --> doShift "F"
