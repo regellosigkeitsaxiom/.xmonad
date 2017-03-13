@@ -103,22 +103,30 @@ myKeys =
 
 myLayoutHook = avoidStruts
              . smartBorders
-             -- . workSpaceHook2
-             -- . workSpaceHook
-             $ layoutHook def
---workSpaceHook = onWorkspaces ["metr"] metrLayoutHook
---workSpaceHook2 = onWorkspaces ["media"] mediaLayoutHook
---mediaLayoutHook = Full ||| Tall 1 (5/100) (1/2)
---metrLayoutHook = tiled ||| Mirror tiled ||| Full
-    --where tiled = Tall 2 (2/100) (1/2)
+             . mediaSpaceHook
+             . webSpaceHook
+             $ myDefaultHook
+
+myDefaultHook = Tall 1 ( 1/12 ) ( 2/3 )
+            ||| Mirror ( Tall 1 ( 1/12 ) ( 2/3 ))
+            ||| Full
+mediaSpaceHook = onWorkspaces ["F"] Full
+webSpaceHook = onWorkspaces ["E"] $ Tall 1 (1/20) (4/5)
 
 myMH = myMH2 <+> manageHook def
+
+keepMaster :: String -> ManageHook
+keepMaster c = assertSlave <+> assertMaster
+  where
+  assertSlave = fmap (/= c) className --> doF W.swapDown
+  assertMaster = className =? c --> doF W.swapMaster
 
 myWorkspaces = ["Q","W","E","R","A","S","D","F"]
 
 myMH2 = composeAll
     [ className =? "mplayer2" --> doShift "F"
     , className =? "MPlayer" --> doShift "F"
+    , keepMaster "Firefox"
     , className =? "Firefox" --> doShift "E"
     , className =? "Evince" --> doShift "R"
     , className =? "Inkscape" --> doShift "F"
@@ -127,5 +135,4 @@ myMH2 = composeAll
     , className =? "Slack" --> doShift "R"
     , className =? "adom" --> doShift "F"
     , title =? "My experiment" --> doShift "F"
-    -- , stringProperty "WM_WINDOW_ROLE" =? "metr" --> doShift "metr"
-    ] --Добавить автоматическое убирание дока при посещении "media"
+    ]
