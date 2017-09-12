@@ -40,6 +40,7 @@ launchXmobars = do
 main = do
     launchXmobars
     spawnConfigured "main.cfg"
+    spawn "xmodmap .Xmodmap"
     --spawnConfigured "gau.cfg"
     xmonad $ ewmh def 
          { modMask = mod4Mask
@@ -51,7 +52,7 @@ main = do
          , focusedBorderColor = bordColor
          , borderWidth = 5
          , normalBorderColor = "#666666"
-         , terminal = "xfce4-terminal"
+         , terminal = "roxterm"
          , handleEventHook = docksEventHook
          , startupHook = docksStartupHook
          } `additionalKeysP` myKeys 
@@ -75,6 +76,10 @@ myKeys =
     , ("<XF86MonBrightnessUp>", spawn "xbacklight +4")
     , ("M-x", spawn "pkill xmobar") --For debug
     , ("M-S-x", liftIO $ launchXmobars ) --For debug
+    , ("M-m", spawn "~/pe/magnifu.sh" )
+    , ("M-0", spawn "obfuscator" )
+    , ("M-o", spawn "firefox -P default")
+    , ("M-9", spawn "slack")
     , ("M-e", windows $ W.greedyView "E")
     , ("M-S-e", windows $ W.shift "E")
     , ("M-r", windows $ W.greedyView "R")
@@ -93,12 +98,11 @@ myKeys =
     , ("M-S-f", windows $ W.shift "F")
     , ("M-i", spawn "pkill xmobar; xmonad --recompile; xmonad --restart")
     , ("M-S-i", io (exitWith ExitSuccess))
-    , ("M-o", spawn "firefox -P default")
-    , ("M-k", spawn "slack")
     , ("<Print>", spawn "scrot -s")
     , ("M-v", sendMessage ToggleStruts)
     , ("M-\\", spawn "xinput set-prop 11 139 0; xdotool mousemove 2000 2000")
     , ("M-S-\\", spawn "xinput set-prop 11 139 1;") -- Hardware-dependent
+    , ("M-]", spawn "roxterm -e ghci") --Calculator
     ]
 
 myLayoutHook = avoidStruts
@@ -111,7 +115,7 @@ myDefaultHook = Tall 1 ( 1/12 ) ( 2/3 )
             ||| Mirror ( Tall 1 ( 1/12 ) ( 2/3 ))
             ||| Full
 mediaSpaceHook = onWorkspaces ["F"] Full
-webSpaceHook = onWorkspaces ["E"] $ Tall 1 (1/20) (4/5)
+webSpaceHook = onWorkspaces ["E"] $ Mirror ( Tall 1 (1/20) (4/5)) ||| Full
 
 myMH = myMH2 <+> manageHook def
 
@@ -129,10 +133,11 @@ myMH2 = composeAll
     , keepMaster "Firefox"
     , className =? "Firefox" --> doShift "E"
     , className =? "Evince" --> doShift "R"
+    , className =? "Acroread" --> doShift "R"
     , className =? "Inkscape" --> doShift "F"
     , className =? "Mcomix" --> doShift "R"
     , className =? "Steam" --> doShift "F"
-    , className =? "Slack" --> doShift "R"
+    , className =? "Slack" --> doShift "W"
     , className =? "adom" --> doShift "F"
     , title =? "My experiment" --> doShift "F"
     ]
