@@ -3,6 +3,7 @@ import XMonad.Actions.SpawnOn
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+--import XMonad.Hooks.Focus --Not released yet
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.PerWorkspace
@@ -42,6 +43,7 @@ main = do
     spawnConfigured "main.cfg"
     spawn "xmodmap .Xmodmap"
     --spawnConfigured "gau.cfg"
+    --xmonad $ ignoreNetActiveWindow $ ewmh def 
     xmonad $ ewmh def 
          { modMask = mod4Mask
          , layoutHook = myLayoutHook
@@ -67,11 +69,16 @@ myKeys =
     , ("M-<XF86AudioNext>", spawn "mocp -k +20")
     , ("<XF86AudioPrev>", spawn "mocp -r")
     , ("M-<XF86AudioPrev>", spawn "mocp -k -20")
-    , ("<XF86AudioLowerVolume>", spawn "amixer set Master 3dB-")
-    , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 3dB+")
+    , ("<XF86AudioLowerVolume>", spawn "pamixer -d 3" )
+    , ("<XF86AudioRaiseVolume>", spawn "pamixer -i 3" )
+    --, ("<XF86AudioLowerVolume>", spawn "amixer -c 0 -- sset Master 3dB-")
+    --, ("<XF86AudioRaiseVolume>", spawn "amixer -c 0 -- sset Master 3dB+")
     --, ("<XF86Launch1>", spawn "sudo pm-hibernate") --Works on Lenovo
     --, ("M-<XF86Launch1>", spawn "sudo pm-suspend") --Works on Lenovo
-    , ("<XF86AudioMute>", spawn "amixer set Master toggle")
+    --, ("<XF86AudioMute>", spawn "amixer set Master toggle")
+    , ("<XF86AudioMute>", spawn "pamixer -t" )
+    , ("M-<XF86MonBrightnessDown>", spawn "xbacklight -1")
+    , ("M-<XF86MonBrightnessUp>", spawn "xbacklight +1")
     , ("<XF86MonBrightnessDown>", spawn "xbacklight -4")
     , ("<XF86MonBrightnessUp>", spawn "xbacklight +4")
     , ("M-x", spawn "pkill xmobar") --For debug
@@ -98,10 +105,13 @@ myKeys =
     , ("M-S-f", windows $ W.shift "F")
     , ("M-i", spawn "pkill xmobar; xmonad --recompile; xmonad --restart")
     , ("M-S-i", io (exitWith ExitSuccess))
-    , ("<Print>", spawn "scrot -s")
+    , ("<Print>", spawn "scrot")
+    , ("M-<Print>", spawn "scrot -u")
     , ("M-v", sendMessage ToggleStruts)
     , ("M-\\", spawn "xinput set-prop 11 139 0; xdotool mousemove 2000 2000")
     , ("M-S-\\", spawn "xinput set-prop 11 139 1;") -- Hardware-dependent
+    --, ("M-\\", spawn "xinput set-prop 12 139 0; xdotool mousemove 2000 2000")
+    --, ("M-S-\\", spawn "xinput set-prop 12 139 1;") -- Hardware-dependent
     , ("M-]", spawn "roxterm -e ghci") --Calculator
     ]
 
@@ -127,17 +137,17 @@ keepMaster c = assertSlave <+> assertMaster
 
 myWorkspaces = ["Q","W","E","R","A","S","D","F"]
 
-myMH2 = composeAll
-    [ className =? "mplayer2" --> doShift "F"
-    , className =? "MPlayer" --> doShift "F"
-    , keepMaster "Firefox"
-    , className =? "Firefox" --> doShift "E"
-    , className =? "Evince" --> doShift "R"
-    , className =? "Acroread" --> doShift "R"
-    , className =? "Inkscape" --> doShift "F"
-    , className =? "Mcomix" --> doShift "R"
-    , className =? "Steam" --> doShift "F"
-    , className =? "Slack" --> doShift "W"
-    , className =? "adom" --> doShift "F"
-    , title =? "My experiment" --> doShift "F"
-    ]
+myMH2 = composeAll . concat $
+  [ [ className =? c --> doShift "F" | c <- wFulls ]
+  , [ keepMaster "Firefox" ]
+  , [ className =? c --> doShift "R" | c <- wReads ]
+  , [ className =? c --> doShift "E" | c <- wBrows ]
+  , [ className =? c --> doF W.focusDown | c <- wFocus ]
+  , [ className =? c --> doShift "W" | c <- wSlack ]
+  ]
+  where
+  wFulls = [ "mplayer2", "MPlayer", "ivie", "Inkskape", "Steam", "adom", "My experiment" ]
+  wFocus = [ "Slack", "slack", "Firefox", "Acroread" ]
+  wSlack = [ "Slack", "slack" ]
+  wReads = [ "MComix", "Evince", "Acroread" ]
+  wBrows = [ "Firefox" ]
