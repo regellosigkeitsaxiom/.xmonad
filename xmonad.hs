@@ -63,7 +63,7 @@ bordColor = "#e01d4b"
 focusColor = "#8888ff"
 myKeys =
     [ ("<XF86AudioPlay>", spawn "mocp -G")
-    , ("M-<XF86AudioPlay>", spawn "mocp -o s; mocp -o r; mocp -o a; mocp -p")
+    , ("M-<XF86AudioPlay>", spawn "mocp -S; mocp -o s; mocp -o r; mocp -o a; mocp -p")
     , ("<XF86AudioStop>", spawn "mocp -s")
     , ("<XF86AudioNext>", spawn "mocp -f")
     , ("M-<XF86AudioNext>", spawn "mocp -k +20")
@@ -108,8 +108,8 @@ myKeys =
     , ("<Print>", spawn "scrot")
     , ("M-<Print>", spawn "scrot -u")
     , ("M-v", sendMessage ToggleStruts)
-    , ("M-\\", spawn "xinput set-prop 11 139 0; xdotool mousemove 2000 2000")
-    , ("M-S-\\", spawn "xinput set-prop 11 139 1;") -- Hardware-dependent
+    , ("M-\\", spawn "xinput set-prop 11 141 0; xdotool mousemove 2000 2000")
+    , ("M-S-\\", spawn "xinput set-prop 11 141 1;") -- Hardware-dependent
     --, ("M-\\", spawn "xinput set-prop 12 139 0; xdotool mousemove 2000 2000")
     --, ("M-S-\\", spawn "xinput set-prop 12 139 1;") -- Hardware-dependent
     , ("M-]", spawn "roxterm -e ghci") --Calculator
